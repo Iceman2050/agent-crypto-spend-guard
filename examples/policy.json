@@ -1,0 +1,8 @@
+{
+  "testnet_only": true,
+  "allowed_mainnets": [],
+  "spend_caps_wei": {
+    "agent-1": 1000000000000000000
+  },
+  "allow_deploys": false
+}

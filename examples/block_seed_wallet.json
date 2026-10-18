@@ -1,0 +1,11 @@
+{
+  "method": "eth_sendTransaction",
+  "params": [
+    {
+      "from": "0x19986a67b07155834f2d31177462782b9605c978",
+      "to": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "value": "0x1",
+      "chainId": 11155111
+    }
+  ]
+}
