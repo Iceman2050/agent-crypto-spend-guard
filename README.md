@@ -41,6 +41,33 @@ The policy file (`examples/policy.json`) controls:
 
 Exit codes: `0` = ALLOWED, `1` = BLOCKED (policy violation — fails CI), `2` = input/usage error. Every request is appended to a JSONL request-replay audit log (`--audit`, default `audit.jsonl`); the running spend ledger persists across invocations (`--ledger`, default `ledger.json`).
 
+## Verdicts, captured from a real run
+
+The three bundled examples, executed 2026-11-01 (21-test suite passes):
+
+Allow — a Sepolia transfer inside the agent's cap:
+
+```json
+{"verdict": "ALLOW", "reasons": ["ALLOW: sepolia, value 1000000000000000000 wei, deploy=False"]}
+```
+
+Block — a mainnet destination under the testnet-only default (exit code 1):
+
+```json
+{"verdict": "BLOCK", "reasons": ["DENY: mainnet destination (ethereum-mainnet) blocked by testnet-only policy"]}
+```
+
+Block — the from-address is derived from a publicly known dev recovery phrase (exit code 1):
+
+```json
+{"verdict": "BLOCK", "reasons": ["DENY: from-address matches a known public-seed-phrase-derived address — agent is spending from a wallet it was never given (possible key derivation from a public recovery phrase)"]}
+```
+
+**Spend policy is one gate in front of an agent's money.** Identity, budgets,
+and a kill switch for the same agents live in
+[Agent Auth Gateway](https://authgateway.getingeniousai.com); the fleet's free
+front door is [BreachHunter](https://breachhunter.getingeniousai.com).
+
 ## Seed-phrase detection — honesty note
 
 `data/known_seed_addresses.json` ships a fixture list of addresses derived from well-known public dev/test recovery phrases. Derivation uses a deterministic SHA-256-based placeholder (`_fixture_keccak`), clearly labeled in code: **"fixture derivation for tests; production should use a real keccak lib"** (eth-hash / pycryptodome keccak + real BIP-39/BIP-44 paths). It is not keccak and the addresses are not real Ethereum addresses — the point is the *detection pattern*, which is production-ready.
@@ -52,22 +79,24 @@ Exit codes: `0` = ALLOWED, `1` = BLOCKED (policy violation — fails CI), `2` = 
 - It cannot see raw signed blobs' internals beyond provided metadata; `eth_sendRawTransaction` enforcement relies on the accompanying metadata.
 - It is not a fraud-proof oracle: a determined operator can bypass any client-side gate. It raises the bar and creates an audit trail.
 
-## Built by Ingenious AI
-
-Part of the [Ingenious AI](https://github.com/Iceman2050) security tooling suite:
-
-[DisclosureGuard](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20DisclosureGuard.)
-[ModelMinder](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20ModelMinder.)
-[TermsWatch](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20TermsWatch.)
-[Vibe-Code Audit](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20Vibe-Code%20Audit.)
-[Rogue-Agent Defense](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20Rogue-Agent%20Defense.)
-[BreachHunter](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20BreachHunter.)
-[ChatBreaker](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20ChatBreaker.)
-[Agent Flight Recorder](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20Agent%20Flight%20Recorder.)
-[Agent Auth Gateway](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20Agent%20Auth%20Gateway.)
-[DomainGuard](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20DomainGuard.)
-[ContentCraft AI](https://wa.me/5016691053?text=Hi%20Ingenious%20AI!%20I%20want%20early%20access%20to%20ContentCraft%20AI.)
-
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## Built by Ingenious AI
+
+- [DisclosureGuard](https://disclosureguard.getingeniousai.com) — AI disclosure compliance
+- [ModelMinder](https://modelminder.getingeniousai.com) — model deprecation radar
+- [TermsWatch](https://termswatch.getingeniousai.com) — AI vendor terms watcher
+- [Vibe-Code Audit](https://vibe-audit.getingeniousai.com) — vibe-coded app security audit
+- [Rogue-Agent Defense](https://rogue-defense.getingeniousai.com) — rogue agent protection
+- [BreachHunter](https://breachhunter.getingeniousai.com) — breach detection
+- [ChatBreaker](https://chatbreaker.getingeniousai.com) — chatbot jailbreak testing
+- [Agent Flight Recorder](https://flightrecorder.getingeniousai.com) — hash-chained agent logging
+- [Agent Auth Gateway](https://authgateway.getingeniousai.com) — agent budget caps & kill switch
+- [DomainGuard](https://domainguard.getingeniousai.com) — domain-impersonation defense
+- [ContentCraft AI](https://contentcraft.getingeniousai.com) — AI content studio
+
+All 11 platforms, one suite deal: [Security Suite](https://ingeniousai-security-checks-mirror-0e97b6.gitlab.io/security-suite.html)
